@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/hillview.tv/assetsAPI/env"
 	"github.com/hillview.tv/assetsAPI/middleware"
+	"github.com/hillview.tv/assetsAPI/routers"
 )
 
 func main() {
@@ -19,6 +20,12 @@ func main() {
 
 	// Adding response headers
 	r.Use(middleware.MuxHeaderMiddleware)
+
+	// == Create Routers ==
+
+	create := r.PathPrefix("/create").Subrouter()
+
+	create.HandleFunc("/asset", routers.CreateAssetHandler).Methods(http.MethodPost)
 
 	// Launch API Listener
 	fmt.Printf("✅ Hillview Assets API running on port %s\n", env.Port)
