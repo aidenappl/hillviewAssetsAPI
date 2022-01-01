@@ -23,8 +23,8 @@ func main() {
 
 	// == Primary Checkout API ==
 
-	r.HandleFunc("/checkout", routers.CheckoutHandler).Methods("POST")
-	r.HandleFunc("/checkin", routers.CheckinHandler).Methods("POST")
+	r.HandleFunc("/checkout", routers.CheckoutHandler).Methods(http.MethodPost)
+	r.HandleFunc("/checkin", routers.CheckinHandler).Methods(http.MethodPost)
 
 	// == Create Routers ==
 
@@ -53,7 +53,7 @@ func main() {
 	// Launch API Listener
 	fmt.Printf("✅ Hillview Assets API running on port %s\n", env.Port)
 
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With, Content-Type, Origin, Authorization, Accept, X-CSRF-Token"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 	log.Fatal(http.ListenAndServe(":"+env.Port, handlers.CORS(originsOk, headersOk, methodsOk)(r)))
