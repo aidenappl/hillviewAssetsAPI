@@ -27,6 +27,24 @@ func main() {
 
 	create.HandleFunc("/asset", routers.CreateAssetHandler).Methods(http.MethodPost)
 
+	// == Validator Routers ==
+
+	valid := r.PathPrefix("/valid").Subrouter()
+
+	valid.HandleFunc("/assetByID/{id}", routers.ValidAssetID).Methods(http.MethodGet)
+	valid.HandleFunc("/assetByTag/{id}", routers.ValidAssetTag).Methods(http.MethodGet)
+	valid.HandleFunc("/userByID/{id}", routers.ValidUserID).Methods(http.MethodGet)
+	valid.HandleFunc("/userByTag/{id}", routers.ValidUserTag).Methods(http.MethodGet)
+
+	// == Read Routers ==
+
+	read := r.PathPrefix("/read").Subrouter()
+
+	read.HandleFunc("/assetByID/{id}", routers.ReadAssetByIDHandler).Methods(http.MethodGet)
+	read.HandleFunc("/assetByTag/{id}", routers.ReadAssetByTagHandler).Methods(http.MethodGet)
+	read.HandleFunc("/userByID/{id}", routers.ReadUserByIDHandler).Methods(http.MethodGet)
+	read.HandleFunc("/userByTag/{id}", routers.ReadUserByTagHandler).Methods(http.MethodGet)
+
 	// Launch API Listener
 	fmt.Printf("✅ Hillview Assets API running on port %s\n", env.Port)
 

@@ -2,7 +2,6 @@ package routers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/hillview.tv/assetsAPI/db"
@@ -51,7 +50,13 @@ func CreateAssetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(assetID)
+	if body.SerialNumber != nil || body.Manufacturer != nil || body.Model != nil || body.Notes != nil {
+		err = query.CreateNewAssetInfo(db.DB, assetID, body.SerialNumber, body.Manufacturer, body.Model, body.Notes)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
 
 	w.WriteHeader(http.StatusCreated)
 
