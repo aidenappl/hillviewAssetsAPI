@@ -15,6 +15,7 @@ type Asset struct {
 }
 
 type AssetCheckout struct {
+	ID             int         `json:"id"`
 	AssetID        int         `json:"asset_id"`
 	CheckoutStatus *GeneralNSN `json:"checkout_status"`
 	AssociatedUser *int        `json:"associated_user"`

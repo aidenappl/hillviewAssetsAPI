@@ -21,6 +21,11 @@ func main() {
 	// Adding response headers
 	r.Use(middleware.MuxHeaderMiddleware)
 
+	// == Primary Checkout API ==
+
+	r.HandleFunc("/checkout", routers.CheckoutHandler).Methods("POST")
+	r.HandleFunc("/checkin", routers.CheckinHandler).Methods("POST")
+
 	// == Create Routers ==
 
 	create := r.PathPrefix("/create").Subrouter()
