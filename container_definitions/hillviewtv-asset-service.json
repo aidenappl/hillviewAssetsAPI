@@ -19,7 +19,7 @@
           {
             "hostPort": 0,
             "protocol": "tcp",
-            "containerPort": 8000
+        "containerPort": 8000
           }
         ],
         "command": null,
