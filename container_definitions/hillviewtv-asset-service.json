@@ -1,0 +1,21 @@
+{
+  "family": "hillviewtv-asset-service",
+  "containerDefinitions": [
+      {
+          "name": "hillviewtv-asset-service",
+          "image": "605737100658.dkr.ecr.us-west-1.amazonaws.com/hillviewtv-asset-service:latest",
+          "cpu": 128,
+          "memoryReservation": 128,
+          "portMappings": [
+              {
+                  "containerPort": 8000,
+                  "protocol": "tcp"
+              }
+          ],
+          "command": [
+              "./main"
+          ],
+          "essential": true
+      }
+  ]
+}
