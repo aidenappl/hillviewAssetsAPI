@@ -69,7 +69,7 @@
     ],
     "placementConstraints": [],
     "memory": "256",
-    "taskRoleArn": "arn:aws:iam::605737100658:role/AuthServiceECSTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::605737100658:role/HillviewTVAPIECSTaskExecutionRole",
     "compatibilities": [
       "EXTERNAL",
       "EC2"
