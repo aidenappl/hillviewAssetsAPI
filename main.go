@@ -15,12 +15,6 @@ import (
 func main() {
 	primary := mux.NewRouter()
 
-	// Logging of requests
-	primary.Use(middleware.LoggingMiddleware)
-
-	// Adding response headers
-	primary.Use(middleware.MuxHeaderMiddleware)
-
 	// Healthcheck Endpoint
 
 	primary.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +24,12 @@ func main() {
 	// Define the API Endpoints
 
 	r := primary.PathPrefix("/assets/v1.1").Subrouter()
+
+	// Logging of requests
+	r.Use(middleware.LoggingMiddleware)
+
+	// Adding response headers
+	r.Use(middleware.MuxHeaderMiddleware)
 
 	// == Checkout Routers ==
 
