@@ -9,12 +9,12 @@ import (
 	"github.com/hillview.tv/assetsAPI/structs"
 )
 
-func CheckinAsset(db db.Queryable, assetID int, notes *string) error {
+func CheckinAsset(db db.Queryable, checkoutID int, notes *string) error {
 	query, args, err := sq.Update("asset_checkouts").
 		Set("checkout_status", 2).
 		Set("time_in", time.Now()).
 		Set("checkout_notes", notes).
-		Where(sq.Eq{"asset_id": assetID}).
+		Where(sq.Eq{"id": checkoutID}).
 		ToSql()
 	if err != nil {
 		return fmt.Errorf("failed to build sql query: %w", err)

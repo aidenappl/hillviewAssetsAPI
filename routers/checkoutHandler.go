@@ -69,7 +69,7 @@ func CheckinHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = query.CheckinAsset(db.DB, body.AssetID, body.Notes)
+	err = query.CheckinAsset(db.DB, activeCheckout.ID, body.Notes)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
