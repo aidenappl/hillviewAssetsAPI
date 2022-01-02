@@ -13,7 +13,16 @@ import (
 )
 
 func main() {
-	r := mux.NewRouter()
+	primary := mux.NewRouter()
+
+	// Healthcheck Endpoint
+
+	primary.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		return
+	}).Methods(http.MethodGet)
+
+	r := primary.PathPrefix("/assets/v1.1").Subrouter()
 
 	// Logging of requests
 	r.Use(middleware.LoggingMiddleware)
@@ -56,5 +65,5 @@ func main() {
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With, Content-Type, Origin, Authorization, Accept, X-CSRF-Token"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
-	log.Fatal(http.ListenAndServe(":"+env.Port, handlers.CORS(originsOk, headersOk, methodsOk)(r)))
+	log.Fatal(http.ListenAndServe(":"+env.Port, handlers.CORS(originsOk, headersOk, methodsOk)(primary)))
 }
