@@ -68,7 +68,7 @@ jobs:
         with:
 
           task-definition: container_definitions/${{ secrets.NAME }}.json
-          container-name: admin-api
+          container-name: hillviewtv-asset-service
           image: ${{ env.IMAGE }}
 
       - name: Update ECS service task definition
