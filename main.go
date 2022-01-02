@@ -15,22 +15,23 @@ import (
 func main() {
 	primary := mux.NewRouter()
 
+	// Logging of requests
+	primary.Use(middleware.LoggingMiddleware)
+
+	// Adding response headers
+	primary.Use(middleware.MuxHeaderMiddleware)
+
 	// Healthcheck Endpoint
 
 	primary.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		return
 	}).Methods(http.MethodGet)
+
+	// Define the API Endpoints
 
 	r := primary.PathPrefix("/assets/v1.1").Subrouter()
 
-	// Logging of requests
-	r.Use(middleware.LoggingMiddleware)
-
-	// Adding response headers
-	r.Use(middleware.MuxHeaderMiddleware)
-
-	// == Primary Checkout API ==
+	// == Checkout Routers ==
 
 	r.HandleFunc("/checkout", routers.CheckoutHandler).Methods(http.MethodPost)
 	r.HandleFunc("/checkin", routers.CheckinHandler).Methods(http.MethodPost)
@@ -62,7 +63,7 @@ func main() {
 	// Launch API Listener
 	fmt.Printf("✅ Hillview Assets API running on port %s\n", env.Port)
 
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With, Content-Type, Origin, Authorization, Accept, X-CSRF-Token"})
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Origin", "Authorization", "Accept", "X-CSRF-Token"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 	log.Fatal(http.ListenAndServe(":"+env.Port, handlers.CORS(originsOk, headersOk, methodsOk)(primary)))
