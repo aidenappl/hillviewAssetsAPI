@@ -41,6 +41,7 @@ func main() {
 	create := r.PathPrefix("/create").Subrouter()
 
 	create.HandleFunc("/asset", routers.CreateAssetHandler).Methods(http.MethodPost)
+	create.HandleFunc("/user", routers.CreateUserHandler).Methods(http.MethodPost)
 
 	// == Validator Routers ==
 

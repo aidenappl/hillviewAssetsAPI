@@ -8,6 +8,24 @@ import (
 	"github.com/hillview.tv/assetsAPI/structs"
 )
 
+func CreateNewUser(db db.Queryable, name string, email string, tag string, photoURL string) error {
+	query, args, err := sq.Insert("users").
+		Columns("name", "email", "identifier", "profile_image_url").
+		Values(name, email, tag, photoURL).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("error building query: %w", err)
+	}
+
+	_, err = db.Exec(query, args...)
+	if err != nil {
+		return fmt.Errorf("error executing query: %w", err)
+	}
+
+	return nil
+
+}
+
 func ReadUser(db db.Queryable, id *int, tag *string) (*structs.User, error) {
 
 	if id == nil && tag == nil {

@@ -8,6 +8,50 @@ import (
 	"github.com/hillview.tv/assetsAPI/query"
 )
 
+type CreateUserRequest struct {
+	Name     *string `json:"name"`
+	Email    *string `json:"email"`
+	Tag      *string `json:"tag"`
+	PhotoURL *string `json:"photo_url"`
+}
+
+func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+	body := CreateUserRequest{}
+	err := json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if body.Name == nil {
+		http.Error(w, "Missing name", http.StatusBadRequest)
+		return
+	}
+
+	if body.Email == nil {
+		http.Error(w, "Missing email", http.StatusBadRequest)
+		return
+	}
+
+	if body.Tag == nil {
+		http.Error(w, "Missing tag", http.StatusBadRequest)
+		return
+	}
+
+	if body.PhotoURL == nil {
+		http.Error(w, "Missing photo_url", http.StatusBadRequest)
+		return
+	}
+
+	err = query.CreateNewUser(db.DB, *body.Name, *body.Email, *body.Tag, *body.PhotoURL)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+}
+
 type CreateAssetRequest struct {
 	Name        *string `json:"name"`
 	ImageURL    *string `json:"image_url"`
