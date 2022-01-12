@@ -23,6 +23,7 @@ type AssetCheckout struct {
 	TimeOut        *time.Time  `json:"time_out"`
 	TimeIn         *time.Time  `json:"time_in"`
 	ExpectedIn     *time.Time  `json:"expected_in"`
+	User           *User       `json:"user"`
 }
 
 type AssetMetadata struct {

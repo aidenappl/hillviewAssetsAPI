@@ -181,6 +181,13 @@ func ReadAsset(db db.Queryable, id *int, tag *string) (*structs.Asset, error) {
 		return nil, fmt.Errorf("failed to read active checkouts: %w", err)
 	}
 
+	user, err := ReadUser(db, checkout.AssociatedUser, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read active checkouts: %w", err)
+	}
+
+	checkout.User = user
+
 	asset.ActiveTab = checkout
 
 	return &asset, nil
