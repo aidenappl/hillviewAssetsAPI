@@ -46,6 +46,7 @@ func ReadAssetCheckoutHistory(db db.Queryable, req ReadAssetCheckoutsRequest) ([
 		Join("assets ON asset_checkouts.asset_id = assets.id").
 		Join("users ON asset_checkouts.associated_user = users.id").
 		Limit(uint64(req.Limit)).
+		OrderBy("asset_checkouts.id DESC").
 		ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("failed to build sql query: %w", err)
