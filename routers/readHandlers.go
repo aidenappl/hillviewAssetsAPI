@@ -10,6 +10,33 @@ import (
 	"github.com/hillview.tv/assetsAPI/query"
 )
 
+func ReadAssetCheckoutHistory(w http.ResponseWriter, r *http.Request) {
+	id, _ := r.URL.Query()["id"]
+
+	if len(id) == 0 {
+		http.Error(w, "No ID provided", http.StatusBadRequest)
+		return
+	}
+
+	intID, err := strconv.Atoi(id[0])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	history, err := query.ReadAssetCheckoutHistory(db.DB, query.ReadAssetCheckoutsRequest{
+		AssetID: intID,
+		Limit:   10,
+	})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(history)
+}
+
 func ReadUserByTagHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tag := vars["id"]

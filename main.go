@@ -60,6 +60,7 @@ func main() {
 	read.HandleFunc("/assetByTag/{id}", routers.ReadAssetByTagHandler).Methods(http.MethodGet)
 	read.HandleFunc("/userByID/{id}", routers.ReadUserByIDHandler).Methods(http.MethodGet)
 	read.HandleFunc("/userByTag/{id}", routers.ReadUserByTagHandler).Methods(http.MethodGet)
+	read.HandleFunc("/assetCheckoutHistory", routers.ReadAssetCheckoutHistory).Methods(http.MethodGet)
 
 	// Launch API Listener
 	fmt.Printf("✅ Hillview Assets API running on port %s\n", env.Port)
