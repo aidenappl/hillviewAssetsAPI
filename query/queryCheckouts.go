@@ -10,7 +10,8 @@ import (
 )
 
 type ReadAssetCheckoutsRequest struct {
-	AssetID int
+	AssetID *string
+	TagID   *string
 	Limit   int
 }
 
@@ -36,8 +37,13 @@ func ReadAssetCheckoutHistory(db db.Queryable, req ReadAssetCheckoutsRequest) ([
 		"users.inserted_at",
 	).
 		From("asset_checkouts").
-		Where(sq.Eq{"asset_checkouts.asset_id": req.AssetID}).
+		Where(
+			sq.Or{
+				sq.Eq{"asset_checkouts.asset_id": req.AssetID},
+				sq.Eq{"assets.identifier": req.TagID},
+			}).
 		Join("checkout_statuses ON asset_checkouts.checkout_status = checkout_statuses.id").
+		Join("assets ON asset_checkouts.asset_id = assets.id").
 		Join("users ON asset_checkouts.associated_user = users.id").
 		Limit(uint64(req.Limit)).
 		ToSql()

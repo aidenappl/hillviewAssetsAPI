@@ -2,6 +2,7 @@ package routers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -12,22 +13,23 @@ import (
 
 func ReadAssetCheckoutHistory(w http.ResponseWriter, r *http.Request) {
 	id, _ := r.URL.Query()["id"]
+	tag, _ := r.URL.Query()["tag"]
 
-	if len(id) == 0 {
-		http.Error(w, "No ID provided", http.StatusBadRequest)
-		return
+	request := query.ReadAssetCheckoutsRequest{
+		Limit: 10,
 	}
 
-	intID, err := strconv.Atoi(id[0])
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	if len(id) > 0 {
+		request.AssetID = &id[0]
 	}
 
-	history, err := query.ReadAssetCheckoutHistory(db.DB, query.ReadAssetCheckoutsRequest{
-		AssetID: intID,
-		Limit:   10,
-	})
+	if len(tag) > 0 {
+		request.TagID = &tag[0]
+	}
+
+	fmt.Println(request)
+
+	history, err := query.ReadAssetCheckoutHistory(db.DB, request)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
