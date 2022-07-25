@@ -2,7 +2,6 @@ package routers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -27,7 +26,6 @@ func ReadAssetCheckoutHistory(w http.ResponseWriter, r *http.Request) {
 		request.TagID = &tag[0]
 	}
 
-	fmt.Println(request)
 
 	history, err := query.ReadAssetCheckoutHistory(db.DB, request)
 	if err != nil {
