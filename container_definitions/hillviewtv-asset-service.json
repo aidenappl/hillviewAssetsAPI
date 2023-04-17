@@ -60,7 +60,7 @@
       }
     ],
     "placementConstraints": [],
-    "memory": "256",
+    "memory": "32",
     "taskRoleArn": "arn:aws:iam::605737100658:role/HillviewTVAPIECSTaskExecutionRole",
     "compatibilities": [
       "EXTERNAL",
