@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hillview.tv/authAPI/env"
+	"github.com/hillview.tv/assetsAPI/env"
 )
 
 func StartHealthCheckPolling(ctx context.Context) {

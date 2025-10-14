@@ -6,8 +6,9 @@ import (
 )
 
 var (
-	Port    = getEnv("PORT", "8000")
-	DatabaseDSN = getEnvOrPanic("DATABASE_DSN")
+	Port           = getEnv("PORT", "8000")
+	DatabaseDSN    = getEnvOrPanic("DATABASE_DSN")
+	HealthCheckURL = getEnvOrPanic("HEALTH_CHECK_URL")
 )
 
 func getEnv(key string, fallback string) string {
