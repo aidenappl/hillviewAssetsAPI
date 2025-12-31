@@ -26,7 +26,6 @@ func ReadAssetCheckoutHistory(w http.ResponseWriter, r *http.Request) {
 		request.TagID = &tag[0]
 	}
 
-
 	history, err := query.ReadAssetCheckoutHistory(db.DB, request)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

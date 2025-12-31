@@ -30,9 +30,7 @@ func StartHealthCheckPolling(ctx context.Context) {
 
 			resp.Body.Close()
 
-			if resp.StatusCode == http.StatusOK {
-				// Log success if the status code is 200 OK
-			} else {
+			if resp.StatusCode != http.StatusOK {
 				log.Printf("⚠️ Health check returned status: %d", resp.StatusCode)
 			}
 

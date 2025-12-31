@@ -56,11 +56,6 @@ func ReadAssetCheckoutHistory(db db.Queryable, req ReadAssetCheckoutsRequest) ([
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute sql query: %w", err)
 	}
-
-	if !rows.Next() {
-		return nil, nil
-	}
-
 	defer rows.Close()
 
 	var checkouts []*structs.AssetCheckout
