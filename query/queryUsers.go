@@ -10,7 +10,7 @@ import (
 
 func CreateNewUser(db db.Queryable, name string, email string, tag string, photoURL string) error {
 	query, args, err := sq.Insert("users").
-		Columns("name", "email", "identifier", "profile_image_url").
+		Columns("name", "email", "nfc_identifier", "profile_image_url").
 		Values(name, email, tag, photoURL).
 		ToSql()
 	if err != nil {
@@ -36,7 +36,7 @@ func ReadUser(db db.Queryable, id *int, tag *string) (*structs.User, error) {
 		"users.id",
 		"users.name",
 		"users.email",
-		"users.identifier",
+		"users.nfc_identifier",
 		"users.profile_image_url",
 		"users.inserted_at",
 	).
@@ -47,7 +47,7 @@ func ReadUser(db db.Queryable, id *int, tag *string) (*structs.User, error) {
 	}
 
 	if tag != nil {
-		q = q.Where(sq.Eq{"users.identifier": *tag})
+		q = q.Where(sq.Eq{"users.nfc_identifier": *tag})
 	}
 
 	query, args, err := q.ToSql()
@@ -72,7 +72,7 @@ func ReadUser(db db.Queryable, id *int, tag *string) (*structs.User, error) {
 		&user.ID,
 		&user.Name,
 		&user.Email,
-		&user.Identifier,
+		&user.NfcIdentifier,
 		&user.ProfileImageURL,
 		&user.InsertedAt,
 	)

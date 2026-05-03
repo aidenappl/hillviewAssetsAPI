@@ -33,7 +33,7 @@ func ReadAssetCheckoutHistory(db db.Queryable, req ReadAssetCheckoutsRequest) ([
 		"users.id",
 		"users.name",
 		"users.email",
-		"users.identifier",
+		"users.nfc_identifier",
 		"users.profile_image_url",
 		"users.inserted_at",
 	).
@@ -83,7 +83,7 @@ func ReadAssetCheckoutHistory(db db.Queryable, req ReadAssetCheckoutsRequest) ([
 			&user.ID,
 			&user.Name,
 			&user.Email,
-			&user.Identifier,
+			&user.NfcIdentifier,
 			&user.ProfileImageURL,
 			&user.InsertedAt,
 		)
