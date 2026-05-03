@@ -24,6 +24,7 @@ func ReadAssetCheckoutHistory(db db.Queryable, req ReadAssetCheckoutsRequest) ([
 		"asset_checkouts.time_out",
 		"asset_checkouts.time_in",
 		"asset_checkouts.expected_in",
+		"asset_checkouts.updated_at",
 
 		"checkout_statuses.id",
 		"checkout_statuses.name",
@@ -73,6 +74,7 @@ func ReadAssetCheckoutHistory(db db.Queryable, req ReadAssetCheckoutsRequest) ([
 			&checkout.TimeOut,
 			&checkout.TimeIn,
 			&checkout.ExpectedIn,
+			&checkout.UpdatedAt,
 
 			&checkout_status.ID,
 			&checkout_status.Name,
@@ -153,6 +155,7 @@ func ReadActiveCheckouts(db db.Queryable, id int) (*structs.AssetCheckout, error
 		"asset_checkouts.time_out",
 		"asset_checkouts.time_in",
 		"asset_checkouts.expected_in",
+		"asset_checkouts.updated_at",
 
 		"checkout_statuses.id",
 		"checkout_statuses.name",
@@ -189,6 +192,7 @@ func ReadActiveCheckouts(db db.Queryable, id int) (*structs.AssetCheckout, error
 		&checkout.TimeOut,
 		&checkout.TimeIn,
 		&checkout.ExpectedIn,
+		&checkout.UpdatedAt,
 
 		&checkout_status.ID,
 		&checkout_status.Name,

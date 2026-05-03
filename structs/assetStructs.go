@@ -12,6 +12,7 @@ type Asset struct {
 	Status      *GeneralNSN    `json:"status"`
 	Metadata    *AssetMetadata `json:"metadata"`
 	ActiveTab   *AssetCheckout `json:"active_tab"`
+	UpdatedAt   *time.Time     `json:"updated_at"`
 }
 
 type AssetCheckout struct {
@@ -23,6 +24,7 @@ type AssetCheckout struct {
 	TimeOut        *time.Time  `json:"time_out"`
 	TimeIn         *time.Time  `json:"time_in"`
 	ExpectedIn     *time.Time  `json:"expected_in"`
+	UpdatedAt      *time.Time  `json:"updated_at"`
 	User           *User       `json:"user"`
 }
 

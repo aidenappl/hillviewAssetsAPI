@@ -100,6 +100,7 @@ func ReadAsset(db db.Queryable, id *int, tag *string) (*structs.Asset, error) {
 		"assets.identifier",
 		"assets.image_url",
 		"assets.description",
+		"assets.updated_at",
 
 		"asset_statuses.id",
 		"asset_statuses.name",
@@ -154,6 +155,7 @@ func ReadAsset(db db.Queryable, id *int, tag *string) (*structs.Asset, error) {
 		&asset.Identifier,
 		&asset.ImageURL,
 		&asset.Description,
+		&asset.UpdatedAt,
 
 		&assetStatus.ID,
 		&assetStatus.Name,
