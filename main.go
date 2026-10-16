@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -12,9 +16,19 @@ import (
 	"github.com/hillview.tv/assetsAPI/env"
 	"github.com/hillview.tv/assetsAPI/middleware"
 	"github.com/hillview.tv/assetsAPI/routers"
+	"github.com/hillview.tv/assetsAPI/telemetry"
 )
 
 func main() {
+	telemetry.Init(telemetry.Config{
+		Service:   "hillview-assets-api",
+		IngestURL: env.MonitorIngestURL,
+		APIKey:    env.MonitorAPIKey,
+		Env:       env.MonitorEnv,
+		SpoolDir:  env.MonitorSpoolDir,
+		Stdout:    env.MonitorStdout,
+	})
+
 	primary := mux.NewRouter()
 
 	// Healthcheck Endpoint
@@ -29,6 +43,9 @@ func main() {
 	// Add context
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
+	// Monitor: one http.request.end event per request, panics recovered
+	r.Use(telemetry.Middleware)
 
 	// Logging of requests
 	r.Use(middleware.LoggingMiddleware)
@@ -77,10 +94,23 @@ func main() {
 	fmt.Printf("✅ Hillview Assets API running on port %s\n", env.Port)
 
 	// Add the health check polling
-	go background.StartHealthCheckPolling(ctx)
+	telemetry.Go(ctx, "background.healthcheck", background.StartHealthCheckPolling)
 
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Origin", "Authorization", "Accept", "X-CSRF-Token"})
 	originsOk := handlers.AllowedOrigins([]string{"https://team.hillview.tv", "https://hillview.tv", "https://live.hillview.tv", "http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
-	log.Fatal(http.ListenAndServe(":"+env.Port, handlers.CORS(originsOk, headersOk, methodsOk)(primary)))
+	exposedOk := handlers.ExposedHeaders([]string{"X-Request-ID"})
+
+	server := &http.Server{
+		Addr:              ":" + env.Port,
+		Handler:           handlers.CORS(originsOk, headersOk, exposedOk, methodsOk)(primary),
+		ReadHeaderTimeout: 15 * time.Second,
+		IdleTimeout:       120 * time.Second,
+	}
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
+	if err := telemetry.ServeWithGracefulShutdown(server, stop); err != nil {
+		log.Fatalf("server failed: %v", err)
+	}
 }
