@@ -7,6 +7,7 @@ import (
 
 	"github.com/hillview.tv/assetsAPI/db"
 	"github.com/hillview.tv/assetsAPI/query"
+	"github.com/hillview.tv/assetsAPI/telemetry"
 )
 
 type CheckoutRequest struct {
@@ -21,13 +22,15 @@ func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 	body := CheckoutRequest{}
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
 	activeCheckout, err := query.ReadActiveCheckouts(db.DB, body.AssetID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
@@ -38,7 +41,8 @@ func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = query.CheckoutAsset(db.DB, body.UserID, body.AssetID, body.Duration, body.OffSite, body.Notes)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
@@ -54,13 +58,15 @@ func CheckinHandler(w http.ResponseWriter, r *http.Request) {
 	body := CheckinRequest{}
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
 	activeCheckout, err := query.ReadActiveCheckouts(db.DB, body.AssetID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
@@ -71,7 +77,8 @@ func CheckinHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = query.CheckinAsset(db.DB, activeCheckout.ID, body.Notes)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 

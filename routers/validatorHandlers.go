@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/hillview.tv/assetsAPI/db"
 	"github.com/hillview.tv/assetsAPI/query"
+	"github.com/hillview.tv/assetsAPI/telemetry"
 )
 
 func ValidUserTag(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +16,8 @@ func ValidUserTag(w http.ResponseWriter, r *http.Request) {
 
 	user, err := query.ReadUser(db.DB, nil, &tag)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
@@ -32,13 +34,15 @@ func ValidUserID(w http.ResponseWriter, r *http.Request) {
 
 	userIntID, err := strconv.Atoi(userID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
 	user, err := query.ReadUser(db.DB, &userIntID, nil)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
@@ -55,13 +59,15 @@ func ValidAssetID(w http.ResponseWriter, r *http.Request) {
 
 	intAssetID, err := strconv.Atoi(assetID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
 	asset, err := query.ReadAsset(db.DB, &intAssetID, nil)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
@@ -78,7 +84,8 @@ func ValidAssetTag(w http.ResponseWriter, r *http.Request) {
 
 	asset, err := query.ReadAsset(db.DB, nil, &assetID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 

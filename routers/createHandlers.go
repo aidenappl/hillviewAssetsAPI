@@ -6,6 +6,7 @@ import (
 
 	"github.com/hillview.tv/assetsAPI/db"
 	"github.com/hillview.tv/assetsAPI/query"
+	"github.com/hillview.tv/assetsAPI/telemetry"
 )
 
 type CreateUserRequest struct {
@@ -19,7 +20,8 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	body := CreateUserRequest{}
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
@@ -45,7 +47,8 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = query.CreateNewUser(db.DB, *body.Name, *body.Email, *body.Tag, *body.PhotoURL)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
@@ -69,7 +72,8 @@ func CreateAssetHandler(w http.ResponseWriter, r *http.Request) {
 	body := CreateAssetRequest{}
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusBadRequest), err)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
@@ -90,14 +94,16 @@ func CreateAssetHandler(w http.ResponseWriter, r *http.Request) {
 
 	assetID, err := query.CreateNewAsset(db.DB, *body.Name, *body.Identifier, *body.Category, body.ImageURL, body.Description)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
 	if body.SerialNumber != nil || body.Manufacturer != nil || body.Model != nil || body.Notes != nil {
 		err = query.CreateNewAssetInfo(db.DB, assetID, body.SerialNumber, body.Manufacturer, body.Model, body.Notes)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 	}
