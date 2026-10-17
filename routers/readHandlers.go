@@ -79,10 +79,11 @@ func ReadAssetByIDHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	assetID := vars["id"]
 
+	// A non-numeric id is the caller's mistake: 400, not 500.
 	intAssetID, err := strconv.Atoi(assetID)
 	if err != nil {
-		telemetry.RecordFailureW(w, http.StatusText(http.StatusInternalServerError), err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		telemetry.RecordFailureW(w, "Invalid asset id", err)
+		http.Error(w, "Invalid asset id", http.StatusBadRequest)
 		return
 	}
 
