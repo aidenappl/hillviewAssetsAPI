@@ -66,6 +66,7 @@ Local runs need a reachable MariaDB. Leave the `MONITOR_*` variables unset local
 - Code that writes errors another way (`http.Error`, hand-written JSON) still gets a cause: the middleware keeps the first 512 bytes of any 5xx body.
 - Every goroutine starts through `telemetry.Go(ctx, name, fn)` so a panic is reported instead of killing the process.
 - Background failures are reported with `telemetry.Warn` / `telemetry.Error` using `{resource}.{action}.failed` names, alongside the existing `log.Printf`.
+- **A caller's mistake is a 4xx, never a 500.** A path id that isn't a number is 400 (`GET /read/assetByID/{id}`), not 500 — every 500 opens a Monitor issue.
 - No tests exist outside `telemetry/` (table-driven, standard `testing`, `monitor.StartRecording`).
 
 ## 6. Domain & architecture
