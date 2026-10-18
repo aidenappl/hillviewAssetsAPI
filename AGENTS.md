@@ -21,7 +21,6 @@ hillviewAssetsAPI/
   main.go                # router, middleware order, background jobs, http.Server + graceful shutdown
   env/env.go             # every environment variable (getEnv / getEnvOrPanic)
   background/            # heartbeat
-  container_definitions/ # legacy ECS task definition (unused since Lattice)
   db/                    # connection to `hillview_assets`
   docs/                  # API reference (`docs/API.md`)
   middleware/            # logging, headers
